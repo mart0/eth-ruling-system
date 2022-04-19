@@ -1,0 +1,51 @@
+{
+  "testURL": "http://localhost/",
+  "rootDir": "../",
+  "globals": {
+      "ts-jest": {
+          "tsConfig": "./config/tsconfig.test.json",
+          "diagnostics": {
+              "ignoreCodes": [
+                  2539,
+                  2352,
+                  2540,
+                  2322,
+                  2349,
+                  7006,
+                  7034,
+                  7005
+              ]
+          }
+      }
+  },
+  "collectCoverage": false,
+  "collectCoverageFrom": [
+      "src/**/*.ts"
+  ],
+  "coverageThreshold": {
+      "global": {
+          "branches": 100,
+          "functions": 100,
+          "lines": 100,
+          "statements": 100
+      }
+  },
+  "coveragePathIgnorePatterns": [
+      "(rest)",
+      "(contracts)",
+      "(data)",
+      "utils/constants.ts",
+      "utils/unsuccessfulResp.ts",
+      "index.ts"
+  ],
+  "testRegex": ".\/__utests__\/.*.test.ts$",
+  "transform": {
+      ".(ts)": "ts-jest"
+  },
+  "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "node"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+      "target": "ES2016",
+      "module": "commonjs",
+      "sourceMap": true,
+      "types": [
+          "jest"
+      ],
+      "strict": true,
+      "noImplicitAny": true,
+      "strictNullChecks": true,
+      "noImplicitThis": true,
+      "alwaysStrict": true,
+      "esModuleInterop": true,
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true,
+      "strictPropertyInitialization": false,
+      "watch": false,
+      "outDir": "../build/src",
+      "baseUrl": ".",
+      "paths": {
+          "koa-bunyan-logger": [
+              "../types/koa-bunyan-logger"
+          ]
+      }
+  },
+  "compileOnSave": false,
+  "include": [
+      "../src"
+  ],
+  "exclude": [
+      "../node_modules",
+      "../build",
+      "../.vscode"
+  ]
+}
