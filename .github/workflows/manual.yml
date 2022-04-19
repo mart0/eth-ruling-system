@@ -1,6 +1,4 @@
-# This is a basic workflow that is manually triggered
-
-name: Manual workflow
+name: Basic CI pipeline
 
 on:
   push:
@@ -10,18 +8,16 @@ on:
 jobs:
   install_dependencies:
     runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: ./app
     steps:
     - name: Install dependencies
       run: npm install
-      
-  build:
-    runs-on: macos-latest
-    steps:
     - name: Build project
       run: npm run build
-      
-  lint:
-    runs-on: macos-latest
-    steps:
     - name: Run eslint
       run: npm run lint
+    - name: Run unit test
+      run: npm run test
+
