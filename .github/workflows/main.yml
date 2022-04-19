@@ -8,9 +8,6 @@ on:
 jobs:
   install_dependencies:
     runs-on: macos-latest
-    defaults:
-      run:
-        working-directory: ./app
     steps:
     - uses: actions/checkout@v2
     - name: Install dependencies
