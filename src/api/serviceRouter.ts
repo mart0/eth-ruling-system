@@ -5,7 +5,7 @@ import { StatusCodes } from "http-status-codes";
 import { healthCheckController } from "../controller/serviceController";
 
 /**
- * App router represents all service-related endpoints.
+ * Router represents all service-related endpoints, like /_healthcheck for example.
  * @returns {Router}
  */
 export function createServiceRouter(): Router {

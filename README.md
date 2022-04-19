@@ -1,7 +1,7 @@
 # eth-ruling-system
 
 ## Description
-Ruling system that monitors and watches all Ethereum transactions and also will stores and filters data based on predefined dynamic configuration.
+Ruling system that monitors and watches all Ethereum transactions. Also stores and filters data based on predefined dynamic configuration.
 ## Prerequisites
 
 - Node - v16.14.2

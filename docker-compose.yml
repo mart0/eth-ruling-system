@@ -15,6 +15,7 @@ services:
     networks:
       - mynetwork
     restart: unless-stopped
+  # TODO: Add the service here
   # adminer:
   #   image: adminer:latest
   #   environment:

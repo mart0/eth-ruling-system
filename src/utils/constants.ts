@@ -9,6 +9,7 @@ export const APP_PORT: number = config.get("appPort") || 3004;
 
 export const INFURA_URL = `https://${process.env.ETHEREUM_NETWORK}.infura.io/v3/${process.env.INFURA_PROJECT_ID}`;
 export const INFURA_WS_URL = `wss://${process.env.ETHEREUM_NETWORK}.infura.io/ws/v3/${process.env.INFURA_PROJECT_ID}`;
+export const REQUEST_TIMEOUT: number = config.get("transactionRequestTimeout") || 7000;
 
 // DB related
 export const DB_HOST = String(process.env.DB_HOST) || "localhost";

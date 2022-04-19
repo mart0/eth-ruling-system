@@ -2,6 +2,7 @@ import Transactions from "../db/models/transactions";
 
 import { Context } from "koa";
 import { calculateAge, initEthereumNodeClients } from "../utils/helpers";
+import { REQUEST_TIMEOUT } from "../utils/constants";
 
 /**
  * Handles the data which serves to /transaction endpoint.
@@ -45,6 +46,6 @@ export async function handleTransactions(ctx: Context) {
             } catch (err) {
                 ctx.log.error(err);
             }
-        }, 1000);
+        }, REQUEST_TIMEOUT);
     });
 }

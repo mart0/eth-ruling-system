@@ -42,8 +42,10 @@ async function startService() {
     const server: Server = main();
     server.listen(APP_PORT);
 
-    console.info(`Application started on ${HOSTNAME}:${APP_PORT}.
-                 Please navigate to the /transactions endpoint in order to trigger the transaction monitoring.`);
+    console.info(
+        `Application started on ${HOSTNAME}:${APP_PORT}. 
+         Please navigate to the /transactions endpoint in order to trigger the transaction monitoring.`
+    );
 }
 
 startService();
