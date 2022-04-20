@@ -34,9 +34,9 @@ async function startService() {
         // Check connection and initialize DB first
         await database.authenticate();
         TransactionsMap(database);
-        console.log('DB connection has been established successfully.');
+        console.log("DB connection has been established successfully.");
       } catch (error) {
-        console.error('Unable to connect to the database:', error);
+        console.error("Unable to connect to the database:", error);
       }
 
     const server: Server = main();

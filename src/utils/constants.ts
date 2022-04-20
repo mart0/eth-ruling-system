@@ -24,7 +24,7 @@ export const DB_PASS = String(process.env.DB_PASS) || "admin";
 // Dynamic Configuration.
 // This application will store and filter data based on the predefined dynamic configuration below:
 
-// If this flag is set to 'true', the application will ALL transactions
+// If this flag is set to 'true', the application will preserve ALL transactions
 export const PRESERVE_ALL_TRANSACTIONS: boolean = config.get("dynamicConfig.allTransactions") || false;
 
 // If this flag is set to 'true', the application will preserve transactions with value bigger than 0

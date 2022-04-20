@@ -1,13 +1,13 @@
 import Transactions from "../db/models/transactions";
 
 import { Context } from "koa";
-import { calculateAge, calculateGasFee } from "../utils/helpers/helpers";
+import { calculateAge, calculateGasFee, Web3Helper } from "../utils/helpers";
 import { REQUEST_TIMEOUT, PRESERVE_NON_ZERO_TX, PRESERVE_EXPENSIVE_TX, PRESERVE_ALL_TRANSACTIONS } from "../utils/constants";
-import { Web3Helper } from "../utils/helpers/Web3Helper";
 import { TransactionType } from "../utils/enums";
 
 /**
- * Handles the data which serves to /transaction endpoint.
+ * This function contains logic whether to upsert a transaction info
+ * into the DB or not.
  * @param {Context} ctx - Koa context 
  */
 export async function handleTransactions(ctx: Context) {
@@ -16,31 +16,33 @@ export async function handleTransactions(ctx: Context) {
     const subscription = web3.subscribe();
 
     ctx.log.debug("[+] Watching transactions...");
-    subscription.on('data', (txHash) => {
+    subscription.on("data", (txHash) => {
         setTimeout(async () => {
             try {
                 const tx = await web3.getTransaction(String(txHash));
                 // Skip if it’s a contract creation transaction
                 if (tx?.blockNumber && tx?.to) {
-                    const txBlock = await web3.getBlock(tx.blockNumber);
+                    const { blockNumber, value, from, to} = tx;
 
-                    const txValue = web3.fromWeiToEther(tx.value);
+                    const txBlock = await web3.getBlock(blockNumber);
+
+                    const txValue = web3.fromWeiToEther(value);
                     const txGasFee = web3.fromWeiToEther(calculateGasFee(txBlock, tx));
 
                     // Check if we want to monitor & preserve this transaction based on the
                     // Dynamic configuration from default.js. If the current transaction
                     // does not match the criteria, continue to the next one.
                     const { shouldPreserve, type } = shouldPreserveTx(txValue, txGasFee);
-                    if (!shouldPreserve) {
-                        return;
-                    } 
+                    if (!shouldPreserve) return;
+
+                    // Prepare the object which is going to be printed and upserted
                     const txData = {
                         type,
                         txHash,
-                        blockNumber: tx.blockNumber,
+                        blockNumber,
                         age: `${calculateAge(txBlock.timestamp)}s`,
-                        from: tx.from,
-                        to: tx.to,
+                        from,
+                        to,
                         value: txValue,
                         fee: txGasFee,
                     };

@@ -1,4 +1,4 @@
-import { Model, Sequelize, DataTypes } from 'sequelize';
+import { Model, Sequelize, DataTypes } from "sequelize";
 
 export default class Transactions extends Model {
   /**
@@ -74,7 +74,7 @@ export const TransactionsMap = (sequelize: Sequelize) => {
     },
   }, {
     sequelize,
-    tableName: 'tblTransactions',
+    tableName: "tblTransactions",
     timestamps: true
   });
   Transactions.sync();

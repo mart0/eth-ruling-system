@@ -16,7 +16,7 @@ export function createServiceRouter(): Router {
         ctx.body = res;
     });
 
-    router.get("Current Service Config", "/_serviceConfig", async (ctx: Context) => {
+    router.get("ServiceConfig", "/_serviceConfig", async (ctx: Context) => {
         const res = await serviceConfigController(ctx);
         ctx.body = res;
     });
