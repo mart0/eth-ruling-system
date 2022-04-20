@@ -1,6 +1,8 @@
 module.exports = {
-  appName: "eth-ruling-system",
-  host: "http://localhost",
-  appPort: 3004,
-  transactionRequestTimeout: 7000,
+  app: {
+    name: "eth-ruling-system",
+    host: "http://localhost",
+    port: 3004,
+  },
+  transactionRequestTimeout: 3000,
 };
