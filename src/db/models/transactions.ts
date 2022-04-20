@@ -1,10 +1,11 @@
 import { Model, Sequelize, DataTypes } from 'sequelize';
+import { TransactionType } from '../../utils/enums';
 
 export default class Transactions extends Model {
   /**
-   * [PK] Auto-incremented txId.
+   * [PK] Transaction type based on pre-defined configuration.
    */
-  public id: number;
+  public type: TransactionType;
   /**
    * [PK] Block number where this transaction was in.
    */
@@ -37,9 +38,8 @@ export default class Transactions extends Model {
 
 export const TransactionsMap = (sequelize: Sequelize) => {
   Transactions.init({
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
+    type: {
+      type: DataTypes.STRING,
       allowNull: false,
       primaryKey: true
     },
@@ -55,8 +55,7 @@ export const TransactionsMap = (sequelize: Sequelize) => {
     },
     from: {
       type: DataTypes.STRING,
-      allowNull: false,
-      primaryKey: true
+      allowNull: false
     },
     to: {
       type: DataTypes.STRING,
