@@ -7,7 +7,7 @@ import database from "../src/db/initDatabase";
 import { Server, createServer } from "http";
 import { createAppRouter,  createServiceRouter } from "./api";
 import { APP_PORT, HOSTNAME } from "../src/utils/constants";
-import { TransactionsMap } from "./db/models/transactions";
+import { TransactionsMap, ConfigMap } from "./db/models";
 
 export function main(): Server {
     const app: Koa = new Koa();
@@ -34,6 +34,7 @@ async function startService() {
         // Check connection and initialize DB first
         await database.authenticate();
         TransactionsMap(database);
+        ConfigMap(database);
         console.log("DB connection has been established successfully.");
       } catch (error) {
         console.error("Unable to connect to the database:", error);

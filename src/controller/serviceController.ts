@@ -1,13 +1,9 @@
 import { Context} from "koa";
 import { version } from "pjson";
-import { HealthCheckResponse, ServiceConfigResponse } from "../utils/types";
-import { 
-    APP_NAME as source,
-    PRESERVE_ALL_TRANSACTIONS as preserveAllTransactions,
-    PRESERVE_EXPENSIVE_TX as preserveExpensiveTx, 
-    PRESERVE_NON_ZERO_TX as preserveNonZeroTx
-} from "../utils/constants";
+import { ConfigResponse, HealthCheckResponse, TransactionTypes } from "../utils/types";
+import { APP_NAME as source } from "../utils/constants";
 import { StatusCodes } from "http-status-codes";
+import { fetchLatestConfig, updateDynamicConfiguration } from "../db/repositories/ConfigRepository";
 
 /**
  * Handles the response of the /_healthcheck endpoint.
@@ -31,18 +27,25 @@ import { StatusCodes } from "http-status-codes";
  * Handles the response of the /_serviceConfig endpoint.
  * Prints the current service configuration which defined which
  * transactons will be persisted and monitored.
- *
- * @param {Context} ctx
  */
- export async function serviceConfigController(ctx: Context): Promise<ServiceConfigResponse> {
-    ctx.log.info("Got a request from %s for %s", ctx.hostname, ctx.path);
+ export async function serviceConfigController(): Promise<ConfigResponse> {
+    const currentConfig = await fetchLatestConfig();
     return {
         isSuccess: true,
         status: StatusCodes.OK,
-        currentServiceConfiguration: {
-            preserveAllTransactions,
-            preserveNonZeroTx,
-            preserveExpensiveTx,
-        }
+        message: "This is the current configuration that the application is using.",
+        currentServiceConfiguration: currentConfig
     };
-  }
+}
+
+export async function changeConfigController(payload: TransactionTypes): Promise<ConfigResponse> {
+    await updateDynamicConfiguration(payload);
+    return {
+        isSuccess: true,
+        status: StatusCodes.OK,
+        message: "Configuration has been updated successfuly!",
+        currentServiceConfiguration: payload
+    };
+}
+
+

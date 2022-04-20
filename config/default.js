@@ -6,8 +6,8 @@ module.exports = {
   },
   transactionRequestTimeout: 3000,
   dynamicConfig: {
-    allTransactions: false,
-    nonZeroTx: true,
-    expensiveTx: true,
+    allTransactions: true,
+    nonZeroTx: false,
+    expensiveTx: false,
   }
 };

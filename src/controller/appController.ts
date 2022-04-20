@@ -1,9 +1,10 @@
-import Transactions from "../db/models/transactions";
-
 import { Context } from "koa";
-import { calculateAge, calculateGasFee, Web3Helper } from "../utils/helpers";
-import { REQUEST_TIMEOUT, PRESERVE_NON_ZERO_TX, PRESERVE_EXPENSIVE_TX, PRESERVE_ALL_TRANSACTIONS } from "../utils/constants";
+import { calculateAge, calculateGasFee } from "../utils/helpers/helpers";
+import { Web3Helper } from "../utils/helpers/Web3Helper";
+import { REQUEST_TIMEOUT } from "../utils/constants";
 import { TransactionType } from "../utils/enums";
+import { fetchLatestConfig } from "../db/repositories/ConfigRepository";
+import { insertTransaction } from "../db/repositories/TransactionsRepository";
 
 /**
  * This function contains logic whether to upsert a transaction info
@@ -32,7 +33,7 @@ export async function handleTransactions(ctx: Context) {
                     // Check if we want to monitor & preserve this transaction based on the
                     // Dynamic configuration from default.js. If the current transaction
                     // does not match the criteria, continue to the next one.
-                    const { shouldPreserve, type } = shouldPreserveTx(txValue, txGasFee);
+                    const { shouldPreserve, type } = await shouldPreserveTx(txValue, txGasFee);
                     if (!shouldPreserve) return;
 
                     // Prepare the object which is going to be printed and upserted
@@ -48,11 +49,7 @@ export async function handleTransactions(ctx: Context) {
                     };
                     
                     ctx.log.info(txData);
-                    try {
-                        await Transactions.upsert(txData)
-                    } catch (error) {
-                        ctx.log.error("An error occured when upserting data into DB", error);
-                    }
+                    await insertTransaction(txData);
                 }
             } catch (err) {
                 ctx.log.error(err);
@@ -100,20 +97,22 @@ export async function handleTransactions(ctx: Context) {
  * @param {string} gasFee 
  * @returns { { shouldPreserve: boolean, type?: TransactionType[]} }
  */
-function shouldPreserveTx(value: string, gasFee: string) {
+async function shouldPreserveTx(value: string, gasFee: string): Promise<{ shouldPreserve: boolean; type?: TransactionType[] }> {
 
-    if (PRESERVE_ALL_TRANSACTIONS) {
+    const { allTransactions, nonZeroTx, expensiveTx } = await fetchLatestConfig();
+
+    if (allTransactions) {
       return { shouldPreserve: true, type:  [TransactionType.All]};    
     }
 
     // There is a possibility to have both flags PRESERVE_NON_ZERO_TX and PRESERVE_EXPENSIVE_TX
     // set to true. In this case, the 'type' of the transaction should be ['nonZeroValue', 'expensiveTx'].
     const type = [];
-    if (PRESERVE_NON_ZERO_TX && Number(value)) {
+    if (nonZeroTx && Number(value)) {
         type.push(TransactionType.NonZeroValue);
     }
 
-    if (PRESERVE_EXPENSIVE_TX && Number(gasFee) > 0.1) {
+    if (expensiveTx && Number(gasFee) > 0.1) {
         type.push(TransactionType.ExpensiveTx);
     }
 

@@ -75,7 +75,8 @@ export const TransactionsMap = (sequelize: Sequelize) => {
   }, {
     sequelize,
     tableName: "tblTransactions",
-    timestamps: true
+    timestamps: true,
+    freezeTableName: true
   });
   Transactions.sync();
 }

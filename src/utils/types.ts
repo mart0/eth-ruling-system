@@ -17,15 +17,17 @@ type HealthCheckBody = {
   error?: string;
 };
 
+export type TransactionTypes = {
+  allTransactions: boolean;
+  nonZeroTx: boolean;
+  expensiveTx: boolean;
+};
+
 type ServiceConfigResponseBody = {
-  currentServiceConfiguration: {
-    preserveAllTransactions: boolean;
-    preserveNonZeroTx: boolean;
-    preserveExpensiveTx: boolean;
-  }
+  currentServiceConfiguration: TransactionTypes
 };
 
 export type HealthCheckResponse = BasicResponse & HealthCheckBody;
 export type TransactionResponse = BasicResponse & TransactionResponseBody;
-export type ServiceConfigResponse = BasicResponse & ServiceConfigResponseBody;
+export type ConfigResponse = BasicResponse & { message: string } & ServiceConfigResponseBody;
 
