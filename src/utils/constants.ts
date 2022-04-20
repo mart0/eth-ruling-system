@@ -19,5 +19,16 @@ export const DB_HOST = String(process.env.DB_HOST) || "localhost";
 export const DB_PORT = Number(process.env.DB_PORT) || 5432;
 export const DB_NAME = String(process.env.DB_NAME) || "postgres";
 export const DB_USER = String(process.env.DB_USER) || "admin";
-export const DB_PASSWORD = String(process.env.DB_PASSWORD) || "admin";
+export const DB_PASS = String(process.env.DB_PASS) || "admin";
 
+// Dynamic Configuration.
+// This application will store and filter data based on the predefined dynamic configuration below:
+
+// If this flag is set to 'true', the application will ALL transactions
+export const PRESERVE_ALL_TRANSACTIONS: boolean = config.get("dynamicConfig.allTransactions") || false;
+
+// If this flag is set to 'true', the application will preserve transactions with value bigger than 0
+export const PRESERVE_NON_ZERO_TX: boolean = config.get("dynamicConfig.nonZeroTx") || false;
+
+// If this flag is set to 'true', the application will preserve transactions with gas fee more than 0,1
+export const PRESERVE_EXPENSIVE_TX: boolean = config.get("dynamicConfig.expensiveTx") || false;

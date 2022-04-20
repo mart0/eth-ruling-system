@@ -42,9 +42,10 @@ async function startService() {
     const server: Server = main();
     server.listen(APP_PORT);
 
+    const url = `${HOSTNAME}:${APP_PORT}`;
     console.info(
-        `Application started on ${HOSTNAME}:${APP_PORT}. 
-         Please navigate to the /transactions endpoint in order to trigger the transaction monitoring.`
+        `Application started on ${url}. Please navigate to the ${url}/transactions 
+and wait a couple of seconds in order to trigger the transaction monitoring.`
     );
 }
 

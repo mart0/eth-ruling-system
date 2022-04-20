@@ -1,11 +1,11 @@
 import { Model, Sequelize, DataTypes } from 'sequelize';
-import { TransactionType } from '../../utils/enums';
 
 export default class Transactions extends Model {
   /**
-   * [PK] Transaction type based on pre-defined configuration.
+   * [PK] Transaction type based on pre-defined configuration (see default.js).
+   * Possible members of the array - 'all', 'nonZeroValue' and 'expensiveTx'.
    */
-  public type: TransactionType;
+  public type: string[];
   /**
    * [PK] Block number where this transaction was in.
    */
@@ -15,7 +15,7 @@ export default class Transactions extends Model {
    */
   public txHash: string;
   /**
-   * [PK] Address of the sender.
+   * Address of the sender.
    */
   public from: string;
   /**
@@ -39,9 +39,8 @@ export default class Transactions extends Model {
 export const TransactionsMap = (sequelize: Sequelize) => {
   Transactions.init({
     type: {
-      type: DataTypes.STRING,
+      type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull: false,
-      primaryKey: true
     },
     blockNumber: {
       type: DataTypes.INTEGER,

@@ -3,6 +3,7 @@ export enum SubscriptionType {
 }
 
 export enum TransactionType {
-  // TODO: Deteremine transaction types
-  Test = "test"
+  All = "all",
+  NonZeroValue = "nonZeroValue",
+  ExpensiveTx = "expensiveTx",
 }

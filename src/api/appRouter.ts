@@ -13,8 +13,8 @@ export function createAppRouter(): Router {
     router.get("Transactions", "/transactions", async (ctx) => { 
         ctx.body = { 
             isSuccess: true,
-            message: "Transaction monitoring has been started. Please check your DB for more information about each transaction.", 
-            status: StatusCodes.OK
+            status: StatusCodes.OK,
+            message: "Transaction monitoring has been started. Please check your DB for more information about each transaction."
         };
         await handleTransactions(ctx);
     });

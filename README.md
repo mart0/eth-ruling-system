@@ -21,22 +21,33 @@ DB_HOST=localhost
 DB_PORT=5434
 DB_NAME=<YOUR_DB_NAME>
 DB_USER=<YOUR_DB_USER>
-DB_PASSWORD=<YOUR_DB_PASSWORD>
+DB_PASS=<YOUR_DB_PASS>
 ```
 ### Important NOTE
 Please have in mind that if the variables above are not set their default values will be used (see __src/utils/constants.ts__) which
 most probably won't work in your case.
 
 ## Build & Run
+
+There are 2 ways to run the project - with local node instance and with Docker (the faster way):
+
+1. Run with local node instance
 ```
 npm install
 npm run build
 npm start
 ```
 
+2. Run with Docker
+
+- Rename __.env.docker.example__ to __.env__ and run:
+```
+docker-compose up -d --build (you may want to skip the -d flag if you want to see the logs for any reason)
+```
+
 ## Trigger transaction monitoring
 
-Once the application is up and running, navigate to *http://localhost/transactions* from your browser in order to trigger the monitoring. 
+Once the application is up and running, navigate to *http://localhost:3004/transactions* from your browser in order to trigger the monitoring. 
 You should see the following response:
 
 ```

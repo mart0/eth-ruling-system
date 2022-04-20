@@ -5,4 +5,9 @@ module.exports = {
     port: 3004,
   },
   transactionRequestTimeout: 3000,
+  dynamicConfig: {
+    allTransactions: false,
+    nonZeroTx: true,
+    expensiveTx: true,
+  }
 };
