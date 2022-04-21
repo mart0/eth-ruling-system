@@ -3,7 +3,7 @@
 ## Description
 A ruling system that monitors and watches all Ethereum transactions. Also, stores and filters data based on predefined dynamic configuration.
 ## Prerequisites
-
+```
 - Node - v16.14.2
 - npm - v8.5.0
 ```
@@ -15,9 +15,7 @@ There are 2 ways to run the project - with local node instance and with Docker (
 
 1. Run with local node instance
 
-```
 - Rename __.env.development.example__ to __.env__ and make sure that the following env variables are correctly set there:
-
 ```
 ETHEREUM_NETWORK = <YOUR_ETHEREUM_NETWORK> // Any testnet like Ropsten, Kovan, Rinkeby, etc.
 INFURA_PROJECT_ID = <YOUR_INFURA_PROJECT_ID> // Can be obtained once you have registered at https://infura.io/
@@ -31,7 +29,7 @@ DB_USER=<YOUR_DB_USER>
 DB_PASS=<YOUR_DB_PASS>
 ```
 ### Important note
-Please have in mind that if the variables above are not set their default values will be used (see __src/utils/constants.ts__) which
+Please have in mind that if the variables above are not set, their default values will be used (see __src/utils/constants.ts__) which
 most probably won't work in your case.
 
 Once the env variables are set, install dependencies, build the project, and then it's ready to be started:
@@ -47,6 +45,8 @@ npm start
 ```
 docker-compose up -d --build (you may want to skip the -d flag if you want to see the logs for any reason)
 ```
+
+The above command will create docker container with the application (with installed dependencies, built and started) and PostgreSQL DB in it ready to be used. For more info, see __Dockerfile__ and __docker-compose.yml__ files.
 
 ## Trigger transaction monitoring
 
@@ -98,5 +98,5 @@ In the request body should be specified which transactions to be monitored & pre
 * Write automation tests using [Cucumber](https://www.npmjs.com/package/cucumber)
 * Implement request/response validation using [Joi](https://www.npmjs.com/package/joi) or  [jsonschema](https://www.npmjs.com/package/jsonschema)
 * Improve the logging and error handling
-* Implement a proper UI using React JS - for example, to be possible the CRUD operations within the application to be triggered by buttons (without firing requests using Curl, Postman or any other client)
+* Implement a proper UI using React JS - for example, to be possible the CRUD operations within the application to be triggered by buttons or visual links (and not using Curl, Postman or any other similar clients)
 * Implement API documentation using [Swagger](https://swagger.io/)
