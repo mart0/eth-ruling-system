@@ -90,7 +90,22 @@ In the request body should be specified which transactions to be monitored & pre
 * If __nonZeroTx__ flag is set to true, transactions with values bigger than 0 will be monitored and preserved. The record in the DB will be marked with "type": {nonZeroTx};
 * If __expensiveTx__ flag is set to true, transactions with gas fees bigger than 0,1 will be monitored and preserved. The record in the DB will be marked with "type": {expensiveTx};
 
-* If both __nonZeroTx__ and __expensiveTx__ are set to true, a combination of both rules will be applied. In the DB the transaction will be preserved with "type": {nonZeroTx, expensiveTx};
+* If both __nonZeroTx__ and __expensiveTx__ are set to true, a combination of both rules will be applied - meaning, transactions with values bigger than 0 and gas fees bigger than 0,1 will be preserved with in DB with "type": {nonZeroTx, expensiveTx};
+
+When the configuration is created/updated successfuly, the following example response should be seen:
+
+```
+{
+    "isSuccess": true,
+    "status": 200,
+    "message": "Configuration has been created/updated successfuly!",
+    "currentServiceConfiguration": {
+        "allTransactions": "false",
+        "nonZeroTx": "true",
+        "expensiveTx": "true"
+    }
+}
+```
 
 ## Ideas for further improvement
 

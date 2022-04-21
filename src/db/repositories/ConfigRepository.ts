@@ -25,7 +25,13 @@ export async function fetchLatestConfig(): Promise<TransactionTypes> {
       };
     }
 
-    return config[0].getDataValue("config");
+    const result = config[0].getDataValue("config");
+
+    return {
+      allTransactions: result.allTransactions === 'true',
+      nonZeroTx: result.nonZeroTx === 'true',
+      expensiveTx: result.expensiveTx === 'true',
+    };
 }
 
 /**
