@@ -2,19 +2,21 @@
 import Config from "../models/config";
 import { PRESERVE_NON_ZERO_TX, PRESERVE_EXPENSIVE_TX, PRESERVE_ALL_TRANSACTIONS } from "../../utils/constants";
 import { TransactionTypes } from "../../utils/types";
+import { Context } from "koa";
 
-export async function fetchLatestConfig(): Promise<{ 
-  allTransactions: boolean, 
-  nonZeroTx: boolean,
-  expensiveTx: boolean,
-}> {
+/**
+ * Fetches the latest configuration from tblConfig. If there is none,
+ * the default one specified in default.js will be returned.
+ * @returns {TransactionTypes}
+ */
+export async function fetchLatestConfig(): Promise<TransactionTypes> {
     // Fetch the latest configuration
     const config = await Config.findAll({
       limit: 1,
       order: [ [ 'createdAt', 'DESC' ]]
     });
 
-    // If for some reason, the result is undefined, set fallback values from default.js
+    // Use the config from default.js as a fallback config
     if (!config || !config.length) {
       return {
         allTransactions: PRESERVE_ALL_TRANSACTIONS,
@@ -26,10 +28,16 @@ export async function fetchLatestConfig(): Promise<{
     return config[0].getDataValue("config");
 }
 
-export async function updateDynamicConfiguration(newConfig: TransactionTypes) {
+/**
+ * Creates new configuration record in tblConfig to be used from the app.
+ * @param {TransactionTypes} newConfig
+ * @param {Context} ctx
+ * @returns {Promise<void>}
+ */
+export async function updateDynamicConfiguration(newConfig: TransactionTypes, ctx: Context): Promise<void> {
   try {
     await Config.upsert({ config: newConfig });
   } catch (error) {
-    console.error("An error occured when upserting config into DB", error);
+    ctx.log.error("An error occured when inserting config into DB", error);
   }
 }

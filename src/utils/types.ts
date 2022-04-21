@@ -1,4 +1,5 @@
 import { StatusCodes } from "http-status-codes";
+import { TransactionTypeEnum } from "./enums";
 
 type BasicResponse = {
   isSuccess: boolean;
@@ -21,6 +22,17 @@ export type TransactionTypes = {
   allTransactions: boolean;
   nonZeroTx: boolean;
   expensiveTx: boolean;
+};
+
+export type TransactionDTO = {
+  type: TransactionTypeEnum[];
+  txHash: string;
+  blockNumber: number;
+  age: string;
+  from: string;
+  to: string;
+  value: string;
+  fee: string;
 };
 
 type ServiceConfigResponseBody = {

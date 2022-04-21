@@ -1,5 +1,8 @@
 import config from "config";
 import dotenv from "dotenv";
+
+import { WebsocketProviderOptions } from "web3-core-helpers";
+
 dotenv.config();
 
 // App related
@@ -12,6 +15,7 @@ export const INFURA_PROJECT_ID: string = String(process.env.INFURA_PROJECT_ID) |
 
 export const INFURA_URL = `https://${ETHEREUM_NETWORK}.infura.io/v3/${INFURA_PROJECT_ID}`;
 export const INFURA_WS_URL = `wss://${ETHEREUM_NETWORK}.infura.io/ws/v3/${INFURA_PROJECT_ID}`;
+export const INFURA_WEB_SOCKET_OPTS: WebsocketProviderOptions = config.get("infuraWebSocketOptions") || {};
 export const REQUEST_TIMEOUT: number = config.get("transactionRequestTimeout") || 3000;
 
 // DB related

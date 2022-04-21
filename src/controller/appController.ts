@@ -2,12 +2,13 @@ import { Context } from "koa";
 import { calculateAge, calculateGasFee } from "../utils/helpers/helpers";
 import { Web3Helper } from "../utils/helpers/Web3Helper";
 import { REQUEST_TIMEOUT } from "../utils/constants";
-import { TransactionType } from "../utils/enums";
+import { TransactionTypeEnum } from "../utils/enums";
 import { fetchLatestConfig } from "../db/repositories/ConfigRepository";
 import { insertTransaction } from "../db/repositories/TransactionsRepository";
+import { TransactionDTO } from "../utils/types";
 
 /**
- * This function contains logic whether to upsert a transaction info
+ * This function contains logic whether to monitor and insert transaction data
  * into the DB or not.
  * @param {Context} ctx - Koa context 
  */
@@ -23,7 +24,7 @@ export async function handleTransactions(ctx: Context) {
                 const tx = await web3.getTransaction(String(txHash));
                 // Skip if it’s a contract creation transaction
                 if (tx?.blockNumber && tx?.to) {
-                    const { blockNumber, value, from, to} = tx;
+                    const { blockNumber, value, from, to } = tx;
 
                     const txBlock = await web3.getBlock(blockNumber);
 
@@ -31,25 +32,25 @@ export async function handleTransactions(ctx: Context) {
                     const txGasFee = web3.fromWeiToEther(calculateGasFee(txBlock, tx));
 
                     // Check if we want to monitor & preserve this transaction based on the
-                    // Dynamic configuration from default.js. If the current transaction
+                    // Dynamic configuration. If the current transaction
                     // does not match the criteria, continue to the next one.
                     const { shouldPreserve, type } = await shouldPreserveTx(txValue, txGasFee);
                     if (!shouldPreserve) return;
 
-                    // Prepare the object which is going to be printed and upserted
+                    // Prepare the transaction object which is going to be monitored and inserted in DB
                     const txData = {
                         type,
                         txHash,
                         blockNumber,
-                        age: `${calculateAge(txBlock.timestamp)}s`,
+                        age: calculateAge(txBlock.timestamp),
                         from,
                         to,
                         value: txValue,
                         fee: txGasFee,
-                    };
+                    } as TransactionDTO;
                     
                     ctx.log.info(txData);
-                    await insertTransaction(txData);
+                    await insertTransaction(txData, ctx);
                 }
             } catch (err) {
                 ctx.log.error(err);
@@ -60,60 +61,29 @@ export async function handleTransactions(ctx: Context) {
 
 /**
  * Function which decides if the current transaction should be inserted into DB
- * based on some pre-defined rules. The rules have priority, meaning if the first one 
- * is satisfied, the transaction will NOT check the others and will create new record in
- * our DB for this transaction. 
- * 
- * The rules priority is as it follows:
- * 
- * Case 0 - All transactions will be preserved (other flags are not checked):
- * PRESERVE_ALL_TRANSACTIONS - true
- * PRESERVE_NON_ZERO_TX - true/false
- * PRESERVE_EXPENSIVE_TX - true/false
- * 
- * Case 1 - Only transactions with value bigger than 0 will be preserved (no matter if their gas fee):
- * PRESERVE_ALL_TRANSACTIONS - false
- * PRESERVE_NON_ZERO_TX - true
- * PRESERVE_EXPENSIVE_TX - false
- * 
- * Case 2 - Only transactions with gas fee bigger than 0,1 will be preserved (no matter if their value):
- * PRESERVE_ALL_TRANSACTIONS - false
- * PRESERVE_NON_ZERO_TX - false
- * PRESERVE_EXPENSIVE_TX - true
- * 
- * Case 3 - Only transactions with value bigger than 0 AND with gas fee bigger than 0,1 (Case 1 + Case 2):
- * PRESERVE_ALL_TRANSACTIONS - false
- * PRESERVE_NON_ZERO_TX - true
- * PRESERVE_EXPENSIVE_TX - true
- * 
- * Case 4 - There will be no preserved transactions:
- * PRESERVE_ALL_TRANSACTIONS - false
- * PRESERVE_NON_ZERO_TX - false
- * PRESERVE_EXPENSIVE_TX - false
- * 
- * Also, sets the transaction type based on the rules above.
+ * based on the latest config. Also, sets the transaction type based on the rules above.
  * 
  * @param {string} value 
  * @param {string} gasFee 
- * @returns { { shouldPreserve: boolean, type?: TransactionType[]} }
+ * @returns { { shouldPreserve: boolean, type?: TransactionTypeEnum[]} }
  */
-async function shouldPreserveTx(value: string, gasFee: string): Promise<{ shouldPreserve: boolean; type?: TransactionType[] }> {
+async function shouldPreserveTx(value: string, gasFee: string): Promise<{ shouldPreserve: boolean; type?: TransactionTypeEnum[] }> {
 
     const { allTransactions, nonZeroTx, expensiveTx } = await fetchLatestConfig();
 
     if (allTransactions) {
-      return { shouldPreserve: true, type:  [TransactionType.All]};    
+      return { shouldPreserve: true, type:  [TransactionTypeEnum.All]};    
     }
 
-    // There is a possibility to have both flags PRESERVE_NON_ZERO_TX and PRESERVE_EXPENSIVE_TX
-    // set to true. In this case, the 'type' of the transaction should be ['nonZeroValue', 'expensiveTx'].
+    // There is a possibility to have both flags nonZeroTx and expensiveTx
+    // set to true. In this case, the 'type' of the transaction should be ['nonZeroTx', 'expensiveTx'].
     const type = [];
     if (nonZeroTx && Number(value)) {
-        type.push(TransactionType.NonZeroValue);
+        type.push(TransactionTypeEnum.NonZeroTx);
     }
 
     if (expensiveTx && Number(gasFee) > 0.1) {
-        type.push(TransactionType.ExpensiveTx);
+        type.push(TransactionTypeEnum.ExpensiveTx);
     }
 
     return type.length ? { shouldPreserve: true, type } : { shouldPreserve: false };

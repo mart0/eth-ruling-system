@@ -10,6 +10,7 @@
     "build": "tsc -p ./config/tsconfig.json",
     "clean": "rm -rf ./build/** ./node_modules && npm i",
     "lint": "eslint . --ext .ts",
+    "lint-fix": "eslint . --ext .ts --fix",
     "test": "echo \"No tests so far..\"",
     "test:coverage": "npm run test -- --coverage"
   },

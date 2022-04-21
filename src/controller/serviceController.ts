@@ -38,8 +38,8 @@ import { fetchLatestConfig, updateDynamicConfiguration } from "../db/repositorie
     };
 }
 
-export async function changeConfigController(payload: TransactionTypes): Promise<ConfigResponse> {
-    await updateDynamicConfiguration(payload);
+export async function changeConfigController(payload: TransactionTypes, ctx: Context): Promise<ConfigResponse> {
+    await updateDynamicConfiguration(payload, ctx);
     return {
         isSuccess: true,
         status: StatusCodes.OK,

@@ -2,8 +2,8 @@ import { Model, Sequelize, DataTypes } from "sequelize";
 
 export default class Transactions extends Model {
   /**
-   * [PK] Transaction type based on pre-defined configuration (see default.js).
-   * Possible members of the array - 'all', 'nonZeroValue' and 'expensiveTx'.
+   * Transaction type based on pre-defined configuration (see default.js).
+   * Possible members of the array - 'all', 'nonZeroTx' and 'expensiveTx'.
    */
   public type: string[];
   /**

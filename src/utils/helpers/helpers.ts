@@ -4,12 +4,12 @@ import { BlockTransactionString } from "web3-eth";
 /**
  * Calculates transaction's age in seconds.
  * @param {string | number} timestamp 
- * @returns {number}
+ * @returns {string}
  */
-export function calculateAge(timestamp: string | number): number {
+export function calculateAge(timestamp: string | number): string {
   const start = new Date(Number(timestamp) * 1000).getSeconds();
   const end  = new Date().getSeconds();
-  return end - start;
+  return `${end - start}s`;
 }
 
 /**

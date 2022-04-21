@@ -99,3 +99,4 @@ In the request body should be specified which transactions to be monitored & pre
 * Implement request/response validation using [Joi](https://www.npmjs.com/package/joi) or  [jsonschema](https://www.npmjs.com/package/jsonschema)
 * Improve the logging and error handling
 * Implement a proper UI using React JS - for example, to be possible the CRUD operations within the application to be triggered by buttons (without firing requests using Curl, Postman or any other client)
+* Implement API documentation using [Swagger](https://swagger.io/)

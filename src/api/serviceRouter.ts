@@ -4,13 +4,16 @@ import { Context} from "koa";
 import { 
     healthCheckController, 
     serviceConfigController,
-    changeConfigController, 
+    changeConfigController as createConfigController, 
 } from "../controller/serviceController";
 import { TransactionTypes } from "../utils/types";
 
 /**
- * Router which represents all service-related endpoints, like /_healthcheck,
- * /_serviceConfig, etc.
+ * Router which represents all service-related endpoints:
+ * 
+ * - GET /_healthcheck - Check if the app is up and running + some additional information about the app.
+ * - GET /serviceConfig - Check the current dynamic configuration used by the app.
+ * - POST /serviceConfig - Create new dynamic configuration to be used by the app.
  * @returns {Router}
  */
 export function createServiceRouter(): Router {
@@ -26,9 +29,9 @@ export function createServiceRouter(): Router {
         ctx.body = res;
     });
 
-    router.post("ChangeServiceConfig", "/serviceConfig", async (ctx: Context) => {
+    router.post("CreateServiceConfig", "/serviceConfig", async (ctx: Context) => {
         const payload = ctx.request.body as TransactionTypes;
-        const res = await changeConfigController(payload);
+        const res = await createConfigController(payload, ctx);
         ctx.body = res;
     });
 

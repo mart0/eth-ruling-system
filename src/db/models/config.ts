@@ -2,7 +2,7 @@ import { Model, Sequelize, DataTypes } from "sequelize";
 
 export default class Config extends Model {
   /**
-   * [PK] Current dynamic configuration.
+   * Config object containing the current dynamic config.
    */
   public config: object;
 }

@@ -2,8 +2,8 @@ export enum SubscriptionType {
   Pending = "pendingTransactions",
 }
 
-export enum TransactionType {
+export enum TransactionTypeEnum {
   All = "all",
-  NonZeroValue = "nonZeroValue",
+  NonZeroTx = "nonZeroTx",
   ExpensiveTx = "expensiveTx",
 }
